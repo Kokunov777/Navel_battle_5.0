@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -21,48 +23,67 @@ namespace SeaBattle.NetworkGame
         private Button btnJoinGame;
         private Button btnRotateShips;
         private Button btnExit;
+        private bool isServer;
 
         public NetworkGame()
         {
-            InitializeComponents();
+            InitializeComponent();
+            SetupForm();
         }
 
-        private void InitializeComponents()
+        private void SetupForm()
         {
-            // Настройка формы
+            // Настройки формы
+            this.Text = "Морской Бой";
+            this.Size = new Size(800, 600);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+
+            
             this.Text = "Сетевой Морской бой";
-            this.Size = new System.Drawing.Size(400, 300);
+            this.Size = new Size(400, 300);
+            this.StartPosition = FormStartPosition.CenterScreen;
 
-            // Кнопка "Создать игру (сервер)"
-            btnCreateGame = new Button
-            {
-                Text = "Создать игру (Сервер)",
-                Location = new System.Drawing.Point(100, 50),
-                Size = new System.Drawing.Size(200, 40)
-            };
-            btnCreateGame.Click += BtnCreateGame_Click;
+                this.Text = "Сетевой Морской бой";
+                this.Size = new Size(400, 300);
+                this.StartPosition = FormStartPosition.CenterScreen;
 
-            // Кнопка "Присоединиться (Клиент)"
-            btnJoinGame = new Button
-            {
-                Text = "Присоединиться (Клиент)",
-                Location = new System.Drawing.Point(100, 100),
-                Size = new System.Drawing.Size(200, 40)
-            };
-            btnJoinGame.Click += BtnJoinGame_Click;
+                // Кнопка "Создать игру"
+                btnCreateGame = new Button
+                {
+                    Text = "Создать игру (Сервер)",
+                    Location = new Point(100, 50),
+                    Size = new Size(200, 40)
+                };
+                btnCreateGame.Click += (s, e) => {
+                    isServer = true;
+                    new OnlineGameForm(true).Show();
+                };
 
+                // Кнопка "Присоединиться"
+                btnJoinGame = new Button
+                {
+                    Text = "Присоединиться (Клиент)",
+                    Location = new Point(100, 100),
+                    Size = new Size(200, 40)
+                };
+                btnJoinGame.Click += (s, e) => {
+                    isServer = false;
+                    new OnlineGameForm(false).Show();
+                };
 
-            // Кнопка "Выход"
-            btnExit = new Button
-            {
-                Text = "Выход в главное меню",
-                Location = new System.Drawing.Point(100, 150),
-                Size = new System.Drawing.Size(200, 40)
-            };
-            btnExit.Click += BtnExit_Click;
+                // Кнопка "Выход"
+                btnExit = new Button
+                {
+                    Text = "Выход",
+                    Location = new Point(100, 150),
+                    Size = new Size(200, 40)
+                };
+                btnExit.Click += (s, e) => this.Close();
 
-            // Добавляем кнопки на форму
-            this.Controls.Add(btnCreateGame);
+                // Добавляем кнопки на форму
+                this.Controls.Add(btnCreateGame);
             this.Controls.Add(btnJoinGame);
             this.Controls.Add(btnRotateShips);
             this.Controls.Add(btnExit);
